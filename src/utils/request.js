@@ -23,3 +23,4 @@ request.interceptors.response.use((response)=> {
     return Promise.reject(error)
 })
 export {request}
+export default request
