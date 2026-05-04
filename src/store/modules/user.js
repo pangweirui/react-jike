@@ -3,11 +3,13 @@ import request from '@/utils/index'
 const userStore=createSlice({
   name:'user',
   initialState:{
-    token:''
+    token:localStorage.getItem('token_key')||''
   },
   reducers:{
     setToken(state,action){
       state.token=action.payload
+      //将token存储到localStorage中
+      localStorage.setItem('token_key',action.payload)
     }
   }
 })
