@@ -1,15 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit'
 import request from '@/utils/index'
+import {setToken as _setToken,getToken} from '@/utils/token'
 const userStore=createSlice({
   name:'user',
   initialState:{
-    token:localStorage.getItem('token_key')||''
+    token:getToken()
   },
   reducers:{
     setToken(state,action){
       state.token=action.payload
       //将token存储到localStorage中
-      localStorage.setItem('token_key',action.payload)
+      _setToken(action.payload)
     }
   }
 })
@@ -27,5 +28,5 @@ const fetchLogin=(loginForm)=>{
   }
 }
 
-export {setToken,fetchLogin}
+export {fetchLogin}
 export default userReducer
