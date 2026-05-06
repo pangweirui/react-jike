@@ -33,6 +33,7 @@ request.interceptors.response.use((response)=> {
       clearUserInfo()
       // 跳转登录页
       router.navigate('/login')
+      // 刷新页面
       window.location.reload()
     }
     return Promise.reject(error)
