@@ -4,7 +4,6 @@ module.exports={
   webpack:{
     alias:{
       '@':path.resolve(__dirname,'src'),
-      'axios$':require.resolve('axios/dist/browser/axios.cjs')
     }
   }
 }
