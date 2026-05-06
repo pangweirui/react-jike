@@ -1,31 +1,11 @@
-import * as echarts from 'echarts';
-import {useEffect,useRef} from 'react'
+import BarChart from './components/BarCharts'
 
 const Home=()=>{
-  const chartRef=useRef(null)
-  useEffect(()=>{
-    const chartDom = chartRef.current
-    const myChart = echarts.init(chartDom);
-    const option= {
-      xAxis: {
-        type: 'category',
-        data: ['Vue', 'Angular', 'React']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          data: [ 10, 50 ,70],
-          type: 'bar'
-        }
-      ]
-    };
-
-    option && myChart.setOption(option);
-  },[])
   return (
-    <div ref={chartRef} style={{width:'500px',height:'500px'}}></div>
+    <div>
+      <BarChart title={'框架对比'} xAxisData={['Vue','Angular','React']} seriesData={[10,50,70]} />
+      <BarChart title={'框架对比'} xAxisData={['Vue','Angular','React']} seriesData={[10,50,70]} />
+    </div>
   )
 }
 export default Home
