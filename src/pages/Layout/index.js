@@ -1,4 +1,8 @@
-import { Outlet,useNavigate } from 'react-router-dom'
+import { Outlet,useNavigate,useLocation } from 'react-router-dom'
+import { useDispatch,useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchUserInfo } from '@/store/modules/user'
+import {clearUserInfo} from '@/store/modules/user'
 import { Layout, Menu, Popconfirm } from 'antd'
 import {
   HomeOutlined,
@@ -29,19 +33,34 @@ const items = [
 ]
 
 const GeekLayout = () => {
+  //点击侧边栏跳转
   const navigate=useNavigate()
   const onMenuClick=(route)=>{
     navigate(route.key)
+  }
+  //根据路径选中侧边栏菜单
+  const location=useLocation()
+  const pathname=location.pathname
+  //获取用户信息
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    dispatch(fetchUserInfo())
+  },[dispatch])
+  const userInfo=useSelector(state=>state.user.userInfo)
+  //退出登录
+  const onConfirm=()=>{
+    dispatch(clearUserInfo())
+    navigate('/login')
   }
   return (
     <Layout>
       <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{userInfo.name}</span>
 
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消" onConfirm={onConfirm}>
               <LogoutOutlined /> 退出
             </Popconfirm>
 
@@ -56,7 +75,7 @@ const GeekLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            selectedKeys={[pathname]}
             items={items}
             onClick={onMenuClick}
             style={{ height: '100%', borderRight: 0 }}></Menu>
