@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import {useState,useEffect} from 'react'
-import { getChannelAPI } from '@/apis/article'
+import { getChannelAPI,createArticleAPI } from '@/apis/article'
 import QuillEditor from '@/components/QuillEditor'
 import './index.scss'
 import {
@@ -23,6 +23,23 @@ const Publish = () => {
     }
     getChannelList()
   },[])
+  //提交表单
+  const onFinish=(data)=>{
+    const {title,content,channel_id}=data
+    const params={
+      title,
+      content,
+      cover:{
+        type:0,
+        images:[]
+      },
+      channel_id
+    }
+    const createArticle=async()=>{
+      const res=await createArticleAPI(params)
+    }
+    createArticle()
+  }
   return (
     <div className="publish">
       <Card
@@ -39,6 +56,7 @@ const Publish = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          onFinish={onFinish}
         >
           <Form.Item
             label="标题"
