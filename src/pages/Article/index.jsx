@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import useChannel from '@/hooks/useChannel'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
 //引入汉化包
 import locale from 'antd/es/date-picker/locale/zh_CN'
@@ -79,6 +80,8 @@ const Article = () => {
       title: 'wkwebview离线化加载h5资源解决方案'
     }
   ]
+  //获取频道列表
+  const {channelList}=useChannel()
   return (
     <div>
       <Card
@@ -106,19 +109,13 @@ const Article = () => {
           <Form.Item label="频道" name="channel_id">
             <Select
               placeholder="请选择文章频道"
-              defaultValue="lucy"
+              defaultValue="推荐"
               style={{ width: 120 }}
               options={
-                [
-                  {
-                    value:'jack',
-                    label:'jack'
-                  },
-                  {
-                    value:'lucy',
-                    label:'lucy'
-                  }
-                ]
+                channelList.map(item=>({
+                  value:item.id,
+                  label:item.name
+                }))
               }
             >
             </Select>

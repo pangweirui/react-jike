@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import {useState,useEffect} from 'react'
-import { getChannelAPI,createArticleAPI } from '@/apis/article'
+import {useState} from 'react'
+import { createArticleAPI } from '@/apis/article'
+import useChannel from '@/hooks/useChannel'
 import QuillEditor from '@/components/QuillEditor'
 import './index.scss'
 import {
@@ -19,14 +20,7 @@ import {PlusOutlined} from '@ant-design/icons'
 
 const Publish = () => {
   //获取频道列表
-  const [channelList,setChannelList]=useState([])
-  useEffect(()=>{
-    const getChannelList=async()=>{
-      const res=await getChannelAPI()
-      setChannelList(res.data.channels)
-    }
-    getChannelList()
-  },[])
+  const {channelList}=useChannel()
   //提交表单
   const onFinish=async(data)=>{
     if(imageType !== fileList.length){
