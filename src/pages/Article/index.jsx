@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getArticleListAPI } from '@/apis/article'
+import { getArticleListAPI,deleteArticleAPI } from '@/apis/article'
 import useChannel from '@/hooks/useChannel'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 //引入汉化包
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
@@ -59,15 +59,30 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
-              type="primary"
-              danger
-              shape="circle"
-              icon={<DeleteOutlined />}
-            />
+            <Popconfirm
+              title="Are you sure to edit this task?"
+              onConfirm={()=>onConfirm(data)}
+              onCancel={()=>onCancel()}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            </Popconfirm>
+            <Popconfirm
+              title="Are you sure to delete this task?"
+              onConfirm={()=>onConfirm(data)  }
+              onCancel={()=>onCancel()}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
-
         )
       }
     }
@@ -77,6 +92,7 @@ const Article = () => {
   ///获取文章列表
   const [list,setList]=useState([])
   const [count,setCount]=useState(0)
+  const [loading,setLoading]=useState(true)
   //筛选参数
   const [reqData,setReqData]=useState(
     {
@@ -100,9 +116,14 @@ const Article = () => {
   }
   useEffect(()=>{
     const getList=async()=>{
-      const res=await getArticleListAPI(reqData)
-      setList(res.data.results)
-      setCount(res.data.total_count)
+      setLoading(true)
+      try{
+        const res=await getArticleListAPI(reqData)
+        setList(res.data.results)
+        setCount(res.data.total_count)
+      }finally{
+        setLoading(false)
+      }
     }
     getList()
   },[reqData])
@@ -113,6 +134,17 @@ const Article = () => {
       page,
     })
   }
+  //删除
+  const onConfirm=async(data)=>{
+    await deleteArticleAPI(data.id)
+    setReqData({
+      ...reqData,
+    })
+  }
+  //取消删除
+  const onCancel=()=>{
+  }
+
   return (
     <div>
       <Card
@@ -171,7 +203,7 @@ const Article = () => {
       </Card>
 
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} pagination={
+        <Table rowKey="id" columns={columns} dataSource={list} loading={loading} pagination={
           {
             total:count,
             pageSize:reqData.page_size,
