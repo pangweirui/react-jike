@@ -29,13 +29,17 @@ const Publish = () => {
   },[])
   //提交表单
   const onFinish=async(data)=>{
+    if(imageType !== fileList.length){
+      message.error('请上传正确的图片数量')
+      return
+    }
     const {title,content,channel_id}=data
     const params={
       title,
       content,
       cover:{
-        type:0,
-        images:[]
+        type:imageType  ,
+        images:fileList.map(item=>item.response.data.url)
       },
       channel_id
     }
