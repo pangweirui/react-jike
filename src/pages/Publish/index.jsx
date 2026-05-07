@@ -4,6 +4,7 @@ import { getChannelAPI,createArticleAPI } from '@/apis/article'
 import QuillEditor from '@/components/QuillEditor'
 import './index.scss'
 import {
+  message,
   Card,
   Breadcrumb,
   Form,
@@ -11,7 +12,10 @@ import {
   Input,
   Space,
   Select,
+  Radio,
+  Upload,
 } from 'antd'
+import {PlusOutlined} from '@ant-design/icons'
 
 const Publish = () => {
   //获取频道列表
@@ -24,7 +28,7 @@ const Publish = () => {
     getChannelList()
   },[])
   //提交表单
-  const onFinish=(data)=>{
+  const onFinish=async(data)=>{
     const {title,content,channel_id}=data
     const params={
       title,
@@ -35,10 +39,13 @@ const Publish = () => {
       },
       channel_id
     }
-    const createArticle=async()=>{
-      const res=await createArticleAPI(params)
-    }
-    createArticle()
+    await createArticleAPI(params)
+    message.success('发布成功')
+  }
+  //上传回调
+  const [fileList,setFileList]=useState([])
+  const onChange=(info)=>{
+    setFileList(info.fileList)
   }
   return (
     <div className="publish">
@@ -83,6 +90,34 @@ const Publish = () => {
                 ))
               }
             />
+          </Form.Item>
+          
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+
+                <Radio value={3}>三图</Radio>
+
+                <Radio value={0}>无图</Radio>
+
+              </Radio.Group>
+
+            </Form.Item>
+
+            <Upload
+              listType="picture-card"
+              showUploadList
+              action={'http://geek.itheima.net/v1_0/upload'}
+              name="image"
+              onChange={onChange}
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+
+            </Upload>
+
           </Form.Item>
 
           <Form.Item
