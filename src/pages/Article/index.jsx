@@ -85,7 +85,7 @@ const Article = () => {
       begin_pubdate:'',
       end_pubdate:'',
       page:1,
-      page_size:4
+      page_size:10
     }
   )
   //筛选
@@ -106,6 +106,13 @@ const Article = () => {
     }
     getList()
   },[reqData])
+  //分页
+  const onChange=(page)=>{
+    setReqData({
+      ...reqData,
+      page,
+    })
+  }
   return (
     <div>
       <Card
@@ -164,7 +171,13 @@ const Article = () => {
       </Card>
 
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} />
+        <Table rowKey="id" columns={columns} dataSource={list} pagination={
+          {
+            total:count,
+            pageSize:reqData.page_size,
+            onChange,
+          }
+        } />
       </Card>
 
     </div>
