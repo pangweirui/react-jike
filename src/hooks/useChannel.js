@@ -3,7 +3,7 @@ import {getChannelAPI} from '@/apis/article'
 
 //封装获取频道列表的hooks
 function useChannel() {
-//获取频道列表
+  //获取频道列表
   const [channelList,setChannelList]=useState([])
   useEffect(()=>{
     const getChannelList=async()=>{
@@ -12,7 +12,7 @@ function useChannel() {
     }
     getChannelList()
   },[])
-
+  //返回频道列表
   return {channelList}
 }
 

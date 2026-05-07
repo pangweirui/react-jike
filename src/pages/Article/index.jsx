@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { getArticleListAPI } from '@/apis/article'
 import useChannel from '@/hooks/useChannel'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
 //引入汉化包
@@ -10,6 +12,11 @@ import img404 from '@/assets/error.png'
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  //定义枚举
+  const status={
+    1:<Tag color="warning">待审核</Tag>,
+    2:<Tag color="success">审核通过</Tag>
+  }
   // 准备列数据
   const columns = [
     {
@@ -28,7 +35,7 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: data => <Tag color="green">审核通过</Tag>
+      render: data => status[data]
 
     },
     {
@@ -65,23 +72,19 @@ const Article = () => {
       }
     }
   ]
-  // 准备表格body数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
-    }
-  ]
   //获取频道列表
   const {channelList}=useChannel()
+  ///获取文章列表
+  const [list,setList]=useState([])
+  const [count,setCount]=useState(0)
+  useEffect(()=>{
+    const getList=async()=>{
+      const res=await getArticleListAPI()
+      setList(res.data.results)
+      setCount(res.data.total_count)
+    }
+    getList()
+  })
   return (
     <div>
       <Card
@@ -139,8 +142,8 @@ const Article = () => {
 
       </Card>
 
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={list} />
       </Card>
 
     </div>
