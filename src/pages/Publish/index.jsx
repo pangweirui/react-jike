@@ -1,6 +1,6 @@
-import { Link,useSearchParams } from 'react-router-dom'
+import { Link,useSearchParams,useNavigate } from 'react-router-dom'
 import {useState,useEffect} from 'react'
-import { createArticleAPI,getArticleDetailAPI } from '@/apis/article'
+import { createArticleAPI,getArticleDetailAPI,updateArticleAPI } from '@/apis/article'
 import useChannel from '@/hooks/useChannel'
 import QuillEditor from '@/components/QuillEditor'
 import './index.scss'
@@ -19,10 +19,13 @@ import {
 import {PlusOutlined} from '@ant-design/icons'
 
 const Publish = () => {
+  //跳转
+  const navigate=useNavigate()
   //获取频道列表
   const {channelList}=useChannel()
   //提交表单
   const onFinish=async(formValue)=>{
+    console.log(formValue)
     if(imageType !== imageList.length){
       message.error('请上传正确的图片数量')
       return
@@ -33,18 +36,31 @@ const Publish = () => {
       content,
       cover:{
         type:imageType  ,
-        images:imageList.map(item=>item.response.data.url)
+        images:imageList.map(item=>{
+          return articleID ? item.url : item.response.data.url
+        })
       },
       channel_id
     }
-    await createArticleAPI(params)
-    message.success('发布成功')
+    //有文章ID时，更新文章，没有文章ID时，创建文章
+    if(articleID){
+      await updateArticleAPI(articleID,params)
+      message.success('更新成功')
+      //更新成功后，跳转到文章列表页
+      navigate('/article')
+    }else{
+      await createArticleAPI(params)
+      message.success('发布成功')
+      //发布成功后，跳转到文章列表页
+      navigate('/article')
+    }
   }
   //回填数据
   const [searchParams]=useSearchParams()
   const articleID=searchParams.get('id')
   const [form]=Form.useForm()
   useEffect(()=>{
+    //只有存在文章ID才回填数据
     if(!articleID) return
     const getArticleDetail=async()=>{
       try{
@@ -68,7 +84,7 @@ const Publish = () => {
   //上传回调
   const [imageList,setImageList]=useState([])
   const onChange=(info)=>{
-    setImageList(info.imageList)
+    setImageList(info.fileList)
   }
   //切换封面单选框类型
   const [imageType,setImageType]=useState(0)
@@ -82,7 +98,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to="/">首页</Link> },
-              { title: '发布文章' },
+              { title: articleID ? '编辑文章' : '创建文章' },
             ]}
           />
         }

@@ -11,7 +11,7 @@ export function getChannelAPI(){
 //提交表单
 export function createArticleAPI(data){
   return request({
-    url:'/mp/articles',
+    url:'/mp/articles?draft=false',
     method:'POST',
     data
   })
@@ -38,5 +38,14 @@ export function deleteArticleAPI(id){
 export function getArticleDetailAPI(id){
   return request({
     url:`/mp/articles/${id}`,
+  })
+}
+
+//更新文章
+export function updateArticleAPI(id,data){
+  return request({
+    url:`/mp/articles/${id}?draft=false`,
+    method:'PUT',
+    data
   })
 }
