@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getArticleListAPI,deleteArticleAPI } from '@/apis/article'
 import useChannel from '@/hooks/useChannel'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
@@ -10,8 +11,8 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 
 const { RangePicker } = DatePicker
-
 const Article = () => {
+  const navigate=useNavigate()
   //定义枚举
   const status={
     1:<Tag color="warning">待审核</Tag>,
@@ -59,15 +60,14 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Popconfirm
-              title="Are you sure to edit this task?"
-              onConfirm={()=>onConfirm(data)}
-              onCancel={()=>onCancel()}
-              okText="确定"
-              cancelText="取消"
-            >
-              <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            </Popconfirm>
+            <Button 
+              type="primary" 
+              shape="circle" 
+              icon={<EditOutlined />} 
+              onClick={()=>{
+                navigate(`/publish?id=${data.id}`)
+              }}
+            />
             <Popconfirm
               title="Are you sure to delete this task?"
               onConfirm={()=>onConfirm(data)  }
@@ -203,13 +203,20 @@ const Article = () => {
       </Card>
 
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={list} loading={loading} pagination={
-          {
-            total:count,
-            pageSize:reqData.page_size,
-            onChange,
+        <Table 
+          rowKey="id" 
+          columns={columns} 
+          dataSource={list} 
+          loading={loading} 
+          locale={loading ? { emptyText: <></> } : undefined} 
+          pagination={
+            {
+              total:count,
+              pageSize:reqData.page_size,
+              onChange,
+            }
           }
-        } />
+        />
       </Card>
 
     </div>

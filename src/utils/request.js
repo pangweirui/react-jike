@@ -4,7 +4,7 @@ import {getToken} from './token'
 import router from '@/router'
 const request=axios.create({
   baseURL:'http://geek.itheima.net/v1_0',
-  timeout:5000
+  timeout:10000
 })
 // 添加请求拦截器
 request.interceptors.request.use((config)=> {

@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import {useState} from 'react'
-import { createArticleAPI } from '@/apis/article'
+import { Link,useSearchParams } from 'react-router-dom'
+import {useState,useEffect} from 'react'
+import { createArticleAPI,getArticleDetailAPI } from '@/apis/article'
 import useChannel from '@/hooks/useChannel'
 import QuillEditor from '@/components/QuillEditor'
 import './index.scss'
@@ -22,12 +22,12 @@ const Publish = () => {
   //获取频道列表
   const {channelList}=useChannel()
   //提交表单
-  const onFinish=async(data)=>{
+  const onFinish=async(formValue)=>{
     if(imageType !== fileList.length){
       message.error('请上传正确的图片数量')
       return
     }
-    const {title,content,channel_id}=data
+    const {title,content,channel_id}=formValue
     const params={
       title,
       content,
@@ -40,6 +40,23 @@ const Publish = () => {
     await createArticleAPI(params)
     message.success('发布成功')
   }
+  //回填数据
+  const [searchParams]=useSearchParams()
+  const articleID=searchParams.get('id')
+  const [form]=Form.useForm()
+  useEffect(()=>{
+    if(!articleID) return
+    const getArticleDetail=async()=>{
+      try{
+        const res=await getArticleDetailAPI(articleID)
+        console.log(res)
+        form.setFieldsValue(res.data)
+      }catch(error){
+        message.error(error.message || '获取文章详情失败')
+      }
+    }
+    getArticleDetail()
+  },[articleID,form])
   //上传回调
   const [fileList,setFileList]=useState([])
   const onChange=(info)=>{
@@ -67,6 +84,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 0 }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"
