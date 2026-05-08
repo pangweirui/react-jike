@@ -23,7 +23,7 @@ const Publish = () => {
   const {channelList}=useChannel()
   //提交表单
   const onFinish=async(formValue)=>{
-    if(imageType !== fileList.length){
+    if(imageType !== imageList.length){
       message.error('请上传正确的图片数量')
       return
     }
@@ -33,7 +33,7 @@ const Publish = () => {
       content,
       cover:{
         type:imageType  ,
-        images:fileList.map(item=>item.response.data.url)
+        images:imageList.map(item=>item.response.data.url)
       },
       channel_id
     }
@@ -49,8 +49,16 @@ const Publish = () => {
     const getArticleDetail=async()=>{
       try{
         const res=await getArticleDetailAPI(articleID)
-        console.log(res)
-        form.setFieldsValue(res.data)
+        const {data}=res
+        const {cover}=data
+        form.setFieldsValue({
+          ...data,
+          type:data.cover.type
+        })
+        setImageType(cover.type)
+        setImageList(cover.images.map(url=>({
+          url,
+        })))
       }catch(error){
         message.error(error.message || '获取文章详情失败')
       }
@@ -58,9 +66,9 @@ const Publish = () => {
     getArticleDetail()
   },[articleID,form])
   //上传回调
-  const [fileList,setFileList]=useState([])
+  const [imageList,setImageList]=useState([])
   const onChange=(info)=>{
-    setFileList(info.fileList)
+    setImageList(info.imageList)
   }
   //切换封面单选框类型
   const [imageType,setImageType]=useState(0)
@@ -133,6 +141,7 @@ const Publish = () => {
               name="image"
               onChange={onChange}
               maxCount={imageType}
+              fileList={imageList}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
