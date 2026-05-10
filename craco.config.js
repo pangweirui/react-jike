@@ -10,6 +10,20 @@ function hasUmdBuild(packageName, fileName) {
 }
 
 module.exports = {
+  devServer: (devServerConfig) => {
+    devServerConfig.proxy = {
+      ...(devServerConfig.proxy || {}),
+      '/api': {
+        target: 'http://geek.itheima.net/v1_0',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+
+    return devServerConfig
+  },
   webpack: {
     alias: {
       '@': path.resolve(__dirname, 'src')

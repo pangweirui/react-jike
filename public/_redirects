@@ -1,0 +1,2 @@
+/api/* http://geek.itheima.net/v1_0/:splat 200
+/* /index.html 200

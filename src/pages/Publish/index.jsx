@@ -153,7 +153,7 @@ const Publish = () => {
             { imageType > 0 && <Upload
               listType="picture-card"
               showUploadList
-              action={'http://geek.itheima.net/v1_0/upload'}
+              action={'/api/upload'}
               name="image"
               onChange={onChange}
               maxCount={imageType}

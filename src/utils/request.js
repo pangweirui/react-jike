@@ -3,7 +3,7 @@ import {clearUserInfo} from '@/store/modules/user'
 import {getToken} from './token'
 import router from '@/router'
 const request=axios.create({
-  baseURL:'http://geek.itheima.net/v1_0',
+  baseURL:'/api',
   timeout:10000
 })
 // 添加请求拦截器
