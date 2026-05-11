@@ -4,7 +4,7 @@ import {getChannelAPI} from '@/apis/article'
 //封装获取频道列表的hooks
 function useChannel() {
   //获取频道列表
-  const [channelList,setChannelList]=useState([])
+  const [channelList,setChannelList]=useState<any[]>([])
   useEffect(()=>{
     const getChannelList=async()=>{
       const res=await getChannelAPI()

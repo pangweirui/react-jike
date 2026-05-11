@@ -7,9 +7,9 @@ import { Card, Form, Input, Button } from 'antd'
 import logo from '@/assets/logo.png'
 
 const Login = () => {
-  const dispatch=useDispatch()
+  const dispatch=useDispatch<any>()
   const navigate=useNavigate()
-  const onFinish=async(values)=>{
+  const onFinish=async(values: any)=>{
     //触发异步action
     await dispatch(fetchLogin(values))
     //登录成功后，跳转到首页

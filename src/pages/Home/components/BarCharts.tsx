@@ -1,13 +1,21 @@
 //柱状图组件
 import * as echarts from 'echarts';
+import type { EChartsOption } from 'echarts'
 import {useEffect,useRef} from 'react'
 
-const BarChart=({title,xAxisData,seriesData})=>{
-  const chartRef=useRef(null)
+type BarChartProps = {
+  title: string
+  xAxisData: string[]
+  seriesData: number[]
+}
+
+const BarChart=({title,xAxisData,seriesData}: BarChartProps)=>{
+  const chartRef=useRef<HTMLDivElement | null>(null)
   useEffect(()=>{
+    if (!chartRef.current) return
     const chartDom = chartRef.current
     const myChart = echarts.init(chartDom);
-    const option= {
+    const option: EChartsOption= {
       title:{
         text:title
       },
@@ -27,6 +35,9 @@ const BarChart=({title,xAxisData,seriesData})=>{
     };
 
     option && myChart.setOption(option);
+    return () => {
+      myChart.dispose()
+    }
   },[title,xAxisData,seriesData])
   return (
     <div ref={chartRef} style={{width:'500px',height:'500px'}}></div>

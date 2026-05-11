@@ -1,6 +1,6 @@
 import {request} from '@/utils/index'
 
-export function loginAPI(formData){
+export function loginAPI(formData: any){
   return request({
     url:'/authorizations',
     method:'POST',

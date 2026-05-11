@@ -9,7 +9,7 @@ export function getChannelAPI(){
 }
 
 //提交表单
-export function createArticleAPI(data){
+export function createArticleAPI(data: any){
   return request({
     url:'/mp/articles?draft=false',
     method:'POST',
@@ -18,7 +18,7 @@ export function createArticleAPI(data){
 }
 
 //获取文章列表
-export function getArticleListAPI(params){
+export function getArticleListAPI(params: any){
   return request({
     url:'/mp/articles',
     method:'GET',
@@ -27,7 +27,7 @@ export function getArticleListAPI(params){
 }
 
 //删除文章
-export function deleteArticleAPI(id){
+export function deleteArticleAPI(id: string | number){
   return request({
     url:`/mp/articles/${id}`,
     method:'DELETE',
@@ -35,14 +35,14 @@ export function deleteArticleAPI(id){
 }
 
 //获取文章详情
-export function getArticleDetailAPI(id){
+export function getArticleDetailAPI(id: string | number){
   return request({
     url:`/mp/articles/${id}`,
   })
 }
 
 //更新文章
-export function updateArticleAPI(id,data){
+export function updateArticleAPI(id: string | number,data: any){
   return request({
     url:`/mp/articles/${id}?draft=false`,
     method:'PUT',

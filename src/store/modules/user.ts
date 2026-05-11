@@ -1,22 +1,29 @@
 import {createSlice} from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 import {loginAPI,getProfileAPI} from '@/apis/user'
 import {setToken as _setToken,getToken} from '@/utils/token'
+
+type UserState = {
+  token: string
+  userInfo: any
+}
+
 const userStore=createSlice({
   name:'user',
   initialState:{
     token:getToken(),
     userInfo:{}
-  },
+  } as UserState,
   reducers:{
-    setToken(state,action){
+    setToken(state,action: PayloadAction<string>){
       state.token=action.payload
       //将token存储到localStorage中
       _setToken(action.payload)
     },
-    setUserInfo(state,action){
+    setUserInfo(state,action: PayloadAction<any>){
       state.userInfo=action.payload
     },
-    clearUserInfo(state,action){
+    clearUserInfo(state){
       state.token=''
       state.userInfo={}
       //将token从localStorage中删除除
@@ -29,8 +36,8 @@ const {setToken,setUserInfo,clearUserInfo}=userStore.actions
 const userReducer=userStore.reducer
 
 //异步方法，登录获取token
-const fetchLogin=(loginForm)=>{
-  return async(dispatch)=>{
+const fetchLogin=(loginForm: any)=>{
+  return async(dispatch: any)=>{
     //发送异步请求
     const res=await loginAPI(loginForm)
     //提交同步action进行token的存入
@@ -39,7 +46,7 @@ const fetchLogin=(loginForm)=>{
 }
 //异步方法，获取用户信息
 const fetchUserInfo=()=>{
-  return async(dispatch)=>{
+  return async(dispatch: any)=>{
     //发送异步请求
     const res=await getProfileAPI()
     console.log(res);

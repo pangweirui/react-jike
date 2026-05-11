@@ -24,7 +24,7 @@ const Publish = () => {
   //获取频道列表
   const {channelList}=useChannel()
   //提交表单
-  const onFinish=async(formValue)=>{
+  const onFinish=async(formValue: any)=>{
     console.log(formValue)
     if(imageType !== imageList.length){
       message.error('请上传正确的图片数量')
@@ -36,7 +36,7 @@ const Publish = () => {
       content,
       cover:{
         type:imageType  ,
-        images:imageList.map(item=>{
+        images:imageList.map((item: any)=>{
           return articleID ? item.url : item.response.data.url
         })
       },
@@ -72,23 +72,23 @@ const Publish = () => {
           type:data.cover.type
         })
         setImageType(cover.type)
-        setImageList(cover.images.map(url=>({
+        setImageList(cover.images.map((url: string)=>({
           url,
         })))
-      }catch(error){
+      }catch(error: any){
         message.error(error.message || '获取文章详情失败')
       }
     }
     getArticleDetail()
   },[articleID,form])
   //上传回调
-  const [imageList,setImageList]=useState([])
-  const onChange=(info)=>{
+  const [imageList,setImageList]=useState<any[]>([])
+  const onChange=(info: any)=>{
     setImageList(info.fileList)
   }
   //切换封面单选框类型
   const [imageType,setImageType]=useState(0)
-  const onTypeChange=(e)=>{
+  const onTypeChange=(e: any)=>{
     setImageType(e.target.value)
   }
   return (

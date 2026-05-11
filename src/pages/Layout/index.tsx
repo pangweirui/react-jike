@@ -35,18 +35,18 @@ const items = [
 const GeekLayout = () => {
   //点击侧边栏跳转
   const navigate=useNavigate()
-  const onMenuClick=(route)=>{
+  const onMenuClick=(route: any)=>{
     navigate(route.key)
   }
   //根据路径选中侧边栏菜单
   const location=useLocation()
   const pathname=location.pathname
   //获取用户信息
-  const dispatch=useDispatch()
+  const dispatch=useDispatch<any>()
   useEffect(()=>{
     dispatch(fetchUserInfo())
   },[dispatch])
-  const userInfo=useSelector(state=>state.user.userInfo)
+  const userInfo=useSelector((state: any)=>state.user.userInfo)
   //退出登录
   const onConfirm=()=>{
     dispatch(clearUserInfo())

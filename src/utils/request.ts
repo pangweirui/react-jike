@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { InternalAxiosRequestConfig } from 'axios'
 import {clearUserInfo} from '@/store/modules/user'
 import {getToken} from './token'
 import router from '@/router'
@@ -7,12 +8,12 @@ const request=axios.create({
   timeout:10000
 })
 // 添加请求拦截器
-request.interceptors.request.use((config)=> {
+request.interceptors.request.use((config: InternalAxiosRequestConfig)=> {
   //操作config注入token数据
   // 获取token
   const token=getToken()
   if(token){
-    config.headers.Authorization=`Bearer ${token}`
+    ;(config.headers as any).Authorization=`Bearer ${token}`
   }
     return config
   }, (error)=> {

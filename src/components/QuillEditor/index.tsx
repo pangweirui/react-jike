@@ -2,9 +2,16 @@ import { useEffect, useRef } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
 
-const QuillEditor = ({ value = '', onChange, placeholder, className }) => {
-  const editorRef = useRef(null)
-  const quillRef = useRef(null)
+type QuillEditorProps = {
+  value?: string
+  onChange?: (value: string) => void
+  placeholder?: string
+  className?: string
+}
+
+const QuillEditor = ({ value = '', onChange, placeholder, className }: QuillEditorProps) => {
+  const editorRef = useRef<HTMLDivElement | null>(null)
+  const quillRef = useRef<Quill | null>(null)
 
   useEffect(() => {
     if (!editorRef.current || quillRef.current) return
@@ -15,14 +22,14 @@ const QuillEditor = ({ value = '', onChange, placeholder, className }) => {
     })
 
     quillRef.current.on('text-change', () => {
-      const html = editorRef.current.querySelector('.ql-editor')?.innerHTML || ''
-      const text = quillRef.current.getText().trim()
+      const html = editorRef.current?.querySelector<HTMLElement>('.ql-editor')?.innerHTML || ''
+      const text = quillRef.current?.getText().trim() || ''
       onChange?.(text ? html : '')
     })
   }, [onChange, placeholder])
 
   useEffect(() => {
-    const editor = editorRef.current?.querySelector('.ql-editor')
+    const editor = editorRef.current?.querySelector<HTMLElement>('.ql-editor')
     if (editor && value !== editor.innerHTML) {
       editor.innerHTML = value
     }

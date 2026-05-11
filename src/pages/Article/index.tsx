@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getArticleListAPI,deleteArticleAPI } from '@/apis/article'
@@ -14,7 +15,7 @@ const { RangePicker } = DatePicker
 const Article = () => {
   const navigate=useNavigate()
   //定义枚举
-  const status={
+  const status: Record<number, ReactNode>={
     1:<Tag color="warning">待审核</Tag>,
     2:<Tag color="success">审核通过</Tag>
   }
@@ -24,7 +25,7 @@ const Article = () => {
       title: '封面',
       dataIndex: 'cover',
       width: 120,
-      render: cover => {
+      render: (cover: any) => {
         return <img src={cover.images[0] || img404} width={80} height={60} alt="" />
       }
     },
@@ -36,7 +37,7 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: data => status[data]
+      render: (data: number) => status[data]
 
     },
     {
@@ -57,7 +58,7 @@ const Article = () => {
     },
     {
       title: '操作',
-      render: data => {
+      render: (data: any) => {
         return (
           <Space size="middle">
             <Button 
@@ -90,7 +91,7 @@ const Article = () => {
   //获取频道列表
   const {channelList}=useChannel()
   ///获取文章列表
-  const [list,setList]=useState([])
+  const [list,setList]=useState<any[]>([])
   const [count,setCount]=useState(0)
   const [loading,setLoading]=useState(true)
   //筛选参数
@@ -105,7 +106,7 @@ const Article = () => {
     }
   )
   //筛选
-  const onFinish=(formValue)=>{
+  const onFinish=(formValue: any)=>{
     setReqData({
       ...reqData,
       channel_id:formValue.channel_id,
@@ -128,14 +129,14 @@ const Article = () => {
     getList()
   },[reqData])
   //分页
-  const onChange=(page)=>{
+  const onChange=(page: number)=>{
     setReqData({
       ...reqData,
       page,
     })
   }
   //删除
-  const onConfirm=async(data)=>{
+  const onConfirm=async(data: any)=>{
     await deleteArticleAPI(data.id)
     setReqData({
       ...reqData,
