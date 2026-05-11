@@ -28,7 +28,7 @@ const Login = () => {
           <Form.Item
             name="mobile"
             rules={[
-              { required: true, message: '请输入手机号' },
+              { required: true, message: '请输入手机号13800000002' },
               {pattern:/^1[3456789]\d{9}$/, message:'请输入正确的手机号'}
             ]}
           >
@@ -37,7 +37,7 @@ const Login = () => {
 
           <Form.Item
             name="code"
-            rules={[{ required: true, message: '请输入验证码' }]}
+            rules={[{ required: true, message: '请输入验证码246810' }]}
           >
             <Input size="large" placeholder="请输入验证码" />
           </Form.Item>
